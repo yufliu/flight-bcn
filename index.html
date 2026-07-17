@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcelona Flight Tracker · LAX + MCO → BCN · Aug 2026</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#111c30; --panel2:#16233c; --line:#26344f;
+    --text:#e8eefb; --muted:#93a4c4; --accent:#4f8cff; --accent2:#7c5cff;
+    --good:#2fbf71; --good-bg:#123a29; --cash:#f2a71b; --cash-bg:#3a2c10;
+    --lax:#4f8cff; --mco:#ff7a59; --danger:#ff5d6c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 20% -10%, #16233c 0%, var(--bg) 55%);
+    color:var(--text); line-height:1.45; padding:22px; min-height:100vh;
+  }
+  a{color:var(--accent)}
+  .wrap{max-width:1280px;margin:0 auto}
+  header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;justify-content:space-between;margin-bottom:6px}
+  h1{font-size:1.5rem;margin:0;letter-spacing:.2px}
+  h1 .plane{opacity:.9}
+  .sub{color:var(--muted);font-size:.9rem;margin:2px 0 0}
+  .trip-pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+  .pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--muted)}
+  .pill b{color:var(--text)}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+  button, .btn{
+    font:inherit;font-size:.85rem;cursor:pointer;border-radius:10px;
+    border:1px solid var(--line);background:var(--panel);color:var(--text);
+    padding:8px 12px;transition:.15s;
+  }
+  button:hover{border-color:var(--accent);background:var(--panel2)}
+  button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-weight:600}
+  button.ghost{background:transparent}
+  button.danger:hover{border-color:var(--danger);color:var(--danger)}
+  .spacer{flex:1}
+  .setting{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted)}
+  .setting input{width:56px;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:5px 7px;font:inherit}
+
+  /* callouts */
+  .callouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:22px}
+  .callout{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;position:relative;overflow:hidden}
+  .callout::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .callout.lax::before{background:var(--lax)} .callout.mco::before{background:var(--mco)}
+  .callout .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+  .callout .big{font-size:1.25rem;font-weight:700;margin:4px 0 2px}
+  .callout .det{font-size:.82rem;color:var(--muted)}
+  .callout .tag{display:inline-block;font-size:.68rem;padding:2px 7px;border-radius:6px;margin-right:6px;font-weight:600}
+  .tag.lax{background:rgba(79,140,255,.16);color:#a9c6ff}
+  .tag.mco{background:rgba(255,122,89,.16);color:#ffb39e}
+
+  section.origin{margin-bottom:26px}
+  .origin-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .origin-head h2{font-size:1.05rem;margin:0}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .dot.lax{background:var(--lax)} .dot.mco{background:var(--mco)}
+  .origin-head .count{font-size:.8rem;color:var(--muted)}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+  table{border-collapse:collapse;width:100%;min-width:1050px;font-size:.84rem}
+  thead th{
+    background:var(--panel2);color:var(--muted);text-align:left;font-weight:600;
+    padding:10px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.76rem;
+    text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0
+  }
+  tbody td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+  tbody tr:hover{background:rgba(255,255,255,.03)}
+  tbody tr.best-points{background:rgba(47,191,113,.07)}
+  tbody tr.best-cash{background:rgba(242,167,27,.06)}
+
+  td.editable{cursor:text;min-width:64px}
+  td.editable:hover{outline:1px dashed var(--line);outline-offset:-2px;border-radius:4px}
+  td [contenteditable]{outline:none;display:block;min-height:1.2em}
+  td [contenteditable]:focus{background:var(--panel2);border-radius:5px;box-shadow:0 0 0 2px var(--accent)}
+
+  .val-badge{display:inline-block;font-weight:700;padding:2px 8px;border-radius:7px;font-size:.82rem}
+  .verdict{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .verdict.points{background:var(--good-bg);color:#6fe3a6}
+  .verdict.cash{background:var(--cash-bg);color:#ffc857}
+  .verdict.na{color:var(--muted)}
+
+  .cell-2x{color:var(--muted);font-size:.74rem}
+  .money{font-variant-numeric:tabular-nums}
+  select.pw, input.dp{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:4px 6px;font:inherit;font-size:.8rem}
+  .rowdel{color:var(--muted);border:none;background:none;cursor:pointer;font-size:1rem;padding:2px 6px}
+  .rowdel:hover{color:var(--danger)}
+  .add-row{margin-top:10px}
+
+  .note{font-size:.78rem;color:var(--muted);margin-top:6px}
+  footer{margin-top:34px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:16px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .saved-flash{color:var(--good);font-size:.78rem;opacity:0;transition:opacity .3s}
+  .saved-flash.show{opacity:1}
+  @media (max-width:640px){ body{padding:12px} h1{font-size:1.2rem} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1><span class="plane">✈️</span> Barcelona Flight Tracker</h1>
+      <p class="sub">Cash vs points comparison · one-way to BCN · late August 2026</p>
+    </div>
+    <div style="text-align:right">
+      <span id="savedFlash" class="saved-flash">✓ saved</span>
+    </div>
+  </header>
+
+  <div class="trip-pills">
+    <span class="pill">🎯 Destination <b>Barcelona (BCN)</b></span>
+    <span class="pill"><span style="color:var(--lax)">●</span> Party A <b>LAX ×2</b> · 8/26–8/28</span>
+    <span class="pill"><span style="color:var(--mco)">●</span> Party B <b>MCO ×2</b> · 8/27</span>
+    <span class="pill">🕑 Goal: arrive around the same time</span>
+    <span class="pill">💳 Chase UR · Amex MR · airline miles</span>
+  </div>
+
+  <div class="toolbar">
+    <button class="primary" onclick="addRow('LAX')">+ Add LAX option</button>
+    <button class="primary" onclick="addRow('MCO')">+ Add MCO option</button>
+    <span class="setting" title="Award value at or above this ¢/point is worth booking with points">
+      Points worth it ≥ <input id="threshold" type="number" step="0.1" value="1.8"> ¢/pt
+    </span>
+    <div class="spacer"></div>
+    <button class="ghost" onclick="exportJSON()">⬇ Export JSON</button>
+    <button class="ghost" onclick="document.getElementById('importFile').click()">⬆ Import</button>
+    <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importJSON(event)">
+    <button class="ghost danger" onclick="resetSeed()">↺ Reset to sample</button>
+  </div>
+
+  <div class="callouts" id="callouts"></div>
+
+  <section class="origin" id="section-LAX">
+    <div class="origin-head">
+      <span class="dot lax"></span><h2>LAX → Barcelona</h2>
+      <span class="count" id="count-LAX"></span>
+    </div>
+    <div class="table-scroll"><table id="table-LAX"></table></div>
+    <div class="note">Flexible departure: <b>8/26, 8/27, or 8/28</b> — set per row to compare across days.</div>
+  </section>
+
+  <section class="origin" id="section-MCO">
+    <div class="origin-head">
+      <span class="dot mco"></span><h2>MCO → Barcelona</h2>
+      <span class="count" id="count-MCO"></span>
+    </div>
+    <div class="table-scroll"><table id="table-MCO"></table></div>
+    <div class="note">Target <b>8/27</b>; aim for a BCN arrival near Party A's.</div>
+  </section>
+
+  <footer>
+    <div class="legend">
+      <span><span class="verdict points">🟢 book points</span> award beats the ¢/pt threshold</span>
+      <span><span class="verdict cash">💵 pay cash</span> cash is the better value</span>
+      <span class="money">¢/pt = (cash − award taxes) ÷ miles × 100</span>
+    </div>
+    <p class="note" style="margin-top:12px">
+      Prices &amp; award costs are <b>manually logged</b> — click any cell to edit. Data autosaves in this browser;
+      use <b>Export JSON</b> to back it up into the repo or move it to your phone.
+      Starter rows are illustrative placeholders — replace with live numbers from Google Flights / airline sites.
+      See <code>NOTES.md</code> for the optional API auto-feed upgrade path.
+    </p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const PAX = 2;                       // travelers per origin
+const STORAGE_KEY = "bcn-flight-tracker-v1";
+const PROGRAMS = ["cash","Chase UR","Amex MR","United","American","Delta","Iberia Avios","Flying Blue","Aer Lingus Avios","Other miles"];
+const DATE_OPTS = { LAX:["2026-08-26","2026-08-27","2026-08-28"], MCO:["2026-08-26","2026-08-27","2026-08-28"] };
+
+const SEED = [
+  // ---- LAX ----
+  {id:"l1",origin:"LAX",departDate:"2026-08-27",airline:"United nonstop",stops:0,duration:"11h 05m",arriveBCN:"Aug 28, 1:35pm",
+   cashPP:absOr(null),payWith:"United",pointsPP:33000,taxesPP:5.60,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"saver economy est."},
+  {id:"l2",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD",stops:1,duration:"14h 40m",arriveBCN:"Aug 27, 6:20pm",
+   cashPP:absOr(null),payWith:"Iberia Avios",pointsPP:34000,taxesPP:210,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"Amex/Chase → Avios; higher taxes via Iberia"},
+  {id:"l3",origin:"LAX",departDate:"2026-08-28",airline:"Air France via CDG",stops:1,duration:"15h 10m",arriveBCN:"Aug 29, 4:05pm",
+   cashPP:520,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"sample cash fare"},
+  // ---- MCO ----
+  {id:"m1",origin:"MCO",departDate:"2026-08-27",airline:"Delta via ATL/CDG",stops:1,duration:"13h 55m",arriveBCN:"Aug 28, 2:10pm",
+   cashPP:absOr(null),payWith:"Flying Blue",pointsPP:30000,taxesPP:120,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"Amex → Flying Blue est."},
+  {id:"m2",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA/MAD",stops:1,duration:"14h 20m",arriveBCN:"Aug 28, 5:45pm",
+   cashPP:absOr(null),payWith:"Iberia Avios",pointsPP:34000,taxesPP:190,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"Avios est."},
+  {id:"m3",origin:"MCO",departDate:"2026-08-27",airline:"United via EWR",stops:1,duration:"12h 50m",arriveBCN:"Aug 28, 1:50pm",
+   cashPP:610,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"sample cash fare"},
+];
+function absOr(v){return v;} // placeholder helper: cash unknown for award rows until you log it
+
+let state = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ const p = JSON.parse(raw); if(p && Array.isArray(p.rows)) return p; }
+  }catch(e){}
+  return { rows: structuredClone(SEED), threshold: 1.8 };
+}
+function save(){
+  state.threshold = parseFloat(document.getElementById("threshold").value)||1.8;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  flashSaved();
+}
+let flashT;
+function flashSaved(){
+  const f=document.getElementById("savedFlash"); f.classList.add("show");
+  clearTimeout(flashT); flashT=setTimeout(()=>f.classList.remove("show"),1200);
+}
+
+function fmtMoney(v){ if(v===null||v===undefined||v==="") return "—"; const n=Number(v); if(isNaN(n)) return "—"; return "$"+n.toLocaleString(undefined,{maximumFractionDigits:2}); }
+function fmtPts(v){ if(v===null||v===undefined||v==="") return "—"; const n=Number(v); if(isNaN(n)) return "—"; return n.toLocaleString()+"k".replace("k",""); }
+function ptsLabel(v){ if(v===null||v===undefined||v==="") return "—"; return Number(v).toLocaleString(); }
+
+// cents-per-point per person; needs cash, points>0
+function cpp(r){
+  if(r.payWith==="cash") return null;
+  const cash=Number(r.cashPP), pts=Number(r.pointsPP), tax=Number(r.taxesPP)||0;
+  if(!cash || !pts || pts<=0) return null;
+  return (cash - tax)/pts*100;
+}
+function verdict(r, threshold){
+  if(r.payWith==="cash") return {cls:"cash", txt:"💵 cash fare"};
+  const v=cpp(r);
+  if(v===null) return {cls:"na", txt:"— need cash+miles"};
+  return v>=threshold ? {cls:"points", txt:"🟢 book points"} : {cls:"cash", txt:"💵 pay cash"};
+}
+
+const COLS = [
+  {k:"departDate",label:"Date",type:"date"},
+  {k:"airline",label:"Airline / Route",type:"text"},
+  {k:"stops",label:"Stops",type:"num"},
+  {k:"duration",label:"Duration",type:"text"},
+  {k:"arriveBCN",label:"Arrive BCN",type:"text"},
+  {k:"cashPP",label:"Cash / person",type:"money"},
+  {k:"payWith",label:"Pay with",type:"program"},
+  {k:"pointsPP",label:"Miles / person",type:"pts"},
+  {k:"taxesPP",label:"+Taxes / person",type:"money"},
+  {k:"value",label:"Value ¢/pt",type:"calc"},
+  {k:"verdict",label:"Verdict",type:"verdictcol"},
+  {k:"dateChecked",label:"Checked",type:"text"},
+  {k:"link",label:"Link",type:"link"},
+  {k:"del",label:"",type:"del"},
+];
+
+function render(){
+  const threshold = parseFloat(document.getElementById("threshold").value)||1.8;
+  ["LAX","MCO"].forEach(origin=>{
+    const rows = state.rows.filter(r=>r.origin===origin);
+    // rank for highlight: best points value & best cash total
+    let bestPtsId=null, bestPtsVal=-1, bestCashId=null, bestCashVal=Infinity;
+    rows.forEach(r=>{
+      const v=cpp(r);
+      if(v!==null && v>bestPtsVal){bestPtsVal=v;bestPtsId=r.id;}
+      if(r.payWith==="cash" && Number(r.cashPP)>0 && Number(r.cashPP)<bestCashVal){bestCashVal=Number(r.cashPP);bestCashId=r.id;}
+    });
+    const tbl=document.getElementById("table-"+origin);
+    let html="<thead><tr>"+COLS.map(c=>`<th>${c.label}</th>`).join("")+"</tr></thead><tbody>";
+    if(rows.length===0){
+      html+=`<tr><td colspan="${COLS.length}" style="color:var(--muted);text-align:center;padding:18px">No options yet — click “+ Add ${origin} option”.</td></tr>`;
+    }
+    rows.forEach(r=>{
+      const v=cpp(r), vd=verdict(r,threshold);
+      const cls=(r.id===bestPtsId?"best-points":"")+(r.id===bestCashId?" best-cash":"");
+      html+=`<tr class="${cls}" data-id="${r.id}">`;
+      COLS.forEach(c=>{ html+=cell(r,c,v,vd); });
+      html+="</tr>";
+    });
+    html+="</tbody>";
+    tbl.innerHTML=html;
+    document.getElementById("count-"+origin).textContent =
+      `${rows.length} option${rows.length!==1?"s":""} · totals ×${PAX} travelers`;
+  });
+  renderCallouts(threshold);
+  wireEditables();
+}
+
+function cell(r,c,v,vd){
+  switch(c.type){
+    case "date":{
+      const opts=DATE_OPTS[r.origin].map(d=>`<option value="${d}" ${d===r.departDate?"selected":""}>${shortDate(d)}</option>`).join("");
+      return `<td><select class="dp" onchange="upd('${r.id}','departDate',this.value)">${opts}<option value="${r.departDate}" ${DATE_OPTS[r.origin].includes(r.departDate)?"":"selected"} hidden>${shortDate(r.departDate)}</option></select></td>`;
+    }
+    case "program":{
+      const opts=PROGRAMS.map(p=>`<option value="${p}" ${p===r.payWith?"selected":""}>${p}</option>`).join("");
+      return `<td><select class="pw" onchange="upd('${r.id}','payWith',this.value)">${opts}</select></td>`;
+    }
+    case "money":{
+      const perp=r[c.k];
+      const x2 = (perp!==null&&perp!==""&&!isNaN(Number(perp))) ? `<span class="cell-2x">×2 ${fmtMoney(Number(perp)*PAX)}</span>` : "";
+      return `<td class="editable money" data-id="${r.id}" data-key="${c.k}" data-type="money"><span contenteditable="true">${perp===null||perp===""?"":perp}</span>${x2}</td>`;
+    }
+    case "pts":{
+      const perp=r[c.k];
+      const x2=(perp!==null&&perp!==""&&!isNaN(Number(perp)))?`<span class="cell-2x">×2 ${ptsLabel(Number(perp)*PAX)}</span>`:"";
+      return `<td class="editable money" data-id="${r.id}" data-key="${c.k}" data-type="pts"><span contenteditable="true">${perp===null||perp===""?"":perp}</span>${x2}</td>`;
+    }
+    case "num":
+      return `<td class="editable" data-id="${r.id}" data-key="${c.k}" data-type="num"><span contenteditable="true">${r[c.k]===null||r[c.k]===""?"":r[c.k]}</span></td>`;
+    case "text":
+      return `<td class="editable" data-id="${r.id}" data-key="${c.k}" data-type="text"><span contenteditable="true">${escapeHtml(r[c.k]||"")}</span></td>`;
+    case "calc":{
+      if(v===null) return `<td class="money" style="color:var(--muted)">—</td>`;
+      const good=v>=(parseFloat(document.getElementById("threshold").value)||1.8);
+      const bg=good?"rgba(47,191,113,.16)":"rgba(242,167,27,.14)";
+      const col=good?"#6fe3a6":"#ffc857";
+      return `<td class="money"><span class="val-badge" style="background:${bg};color:${col}">${v.toFixed(2)}¢</span></td>`;
+    }
+    case "verdictcol":
+      return `<td><span class="verdict ${vd.cls}">${vd.txt}</span></td>`;
+    case "link":{
+      const url=r.link||"";
+      return `<td class="editable" data-id="${r.id}" data-key="link" data-type="text" style="max-width:120px">${url?`<a href="${escapeAttr(url)}" target="_blank" rel="noopener">open ↗</a>`:`<span contenteditable="true" style="color:var(--muted)">add link</span>`}</td>`;
+    }
+    case "del":
+      return `<td><button class="rowdel" title="Delete row" onclick="delRow('${r.id}')">✕</button></td>`;
+  }
+  return "<td></td>";
+}
+
+function renderCallouts(threshold){
+  const el=document.getElementById("callouts");
+  let html="";
+  ["LAX","MCO"].forEach(origin=>{
+    const rows=state.rows.filter(r=>r.origin===origin);
+    // best points
+    let bp=null,bpv=-1; rows.forEach(r=>{const v=cpp(r); if(v!==null&&v>bpv){bpv=v;bp=r;}});
+    // best cash (lowest per-person cash among cash rows, or any row with cash logged)
+    let bc=null,bcv=Infinity; rows.forEach(r=>{const c=Number(r.cashPP); if(c>0&&c<bcv){bcv=c;bc=r;}});
+    const cls=origin.toLowerCase();
+    html+=`<div class="callout ${cls}">
+      <div class="lbl"><span class="tag ${cls}">${origin}</span>Best value with points</div>
+      ${bp?`<div class="big">${bpv.toFixed(2)}¢ / pt</div>
+        <div class="det">${escapeHtml(bp.airline)} · ${ptsLabel(bp.pointsPP*PAX)} miles + ${fmtMoney(bp.taxesPP*PAX)} · ${shortDate(bp.departDate)}</div>`
+      :`<div class="big" style="color:var(--muted)">—</div><div class="det">Log cash + miles on an award row to compute value.</div>`}
+    </div>`;
+    html+=`<div class="callout ${cls}">
+      <div class="lbl"><span class="tag ${cls}">${origin}</span>Cheapest cash (×2)</div>
+      ${bc?`<div class="big">${fmtMoney(bcv*PAX)}</div>
+        <div class="det">${escapeHtml(bc.airline)} · ${fmtMoney(bcv)}/person · ${shortDate(bc.departDate)} · arr ${escapeHtml(bc.arriveBCN||"—")}</div>`
+      :`<div class="big" style="color:var(--muted)">—</div><div class="det">No cash fare logged yet.</div>`}
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+/* ---------- edits ---------- */
+function upd(id,key,value){
+  const r=state.rows.find(x=>x.id===id); if(!r) return;
+  r[key]=value; save(); render();
+}
+function commitCell(td){
+  const id=td.dataset.id, key=td.dataset.key, type=td.dataset.type;
+  const span=td.querySelector("[contenteditable]");
+  let val=span?span.textContent.trim():"";
+  const r=state.rows.find(x=>x.id===id); if(!r) return;
+  if(type==="money"||type==="pts"||type==="num"){
+    val=val.replace(/[$,\s]/g,"");
+    r[key]= val==="" ? null : (isNaN(Number(val))?r[key]:Number(val));
+  } else {
+    r[key]=val;
+  }
+  save(); render();
+}
+function wireEditables(){
+  document.querySelectorAll("td.editable [contenteditable]").forEach(span=>{
+    span.addEventListener("blur",()=>commitCell(span.closest("td")));
+    span.addEventListener("keydown",e=>{
+      if(e.key==="Enter"){e.preventDefault();span.blur();}
+    });
+  });
+}
+
+function addRow(origin){
+  const id=origin.toLowerCase()+"_"+Math.abs(hashStr(origin+state.rows.length+JSON.stringify(state.rows).length));
+  state.rows.push({id,origin,departDate:origin==="MCO"?"2026-08-27":"2026-08-27",airline:"New option",stops:1,duration:"",arriveBCN:"",cashPP:null,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"",notes:""});
+  save(); render();
+  // scroll to the section
+  document.getElementById("section-"+origin).scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function delRow(id){
+  const r=state.rows.find(x=>x.id===id);
+  if(r && !confirm(`Delete this ${r.origin} option (${r.airline})?`)) return;
+  state.rows=state.rows.filter(x=>x.id!==id); save(); render();
+}
+function resetSeed(){
+  if(!confirm("Replace all rows with the sample data? Your logged fares will be lost (export first to keep them).")) return;
+  state={rows:structuredClone(SEED),threshold:parseFloat(document.getElementById("threshold").value)||1.8};
+  save(); render();
+}
+
+/* ---------- import / export ---------- */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="bcn-flight-tracker.json";
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function importJSON(ev){
+  const file=ev.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const p=JSON.parse(rd.result);
+      if(!p||!Array.isArray(p.rows)) throw new Error("bad file");
+      state=p; if(p.threshold) document.getElementById("threshold").value=p.threshold;
+      save(); render();
+    }catch(e){ alert("Couldn't read that file — expected a tracker JSON export."); }
+  };
+  rd.readAsText(file); ev.target.value="";
+}
+
+/* ---------- utils ---------- */
+function shortDate(d){
+  if(!d) return "—";
+  const m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return d;
+  const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m[2])-1];
+  return `${mo} ${parseInt(m[3])}`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function escapeAttr(s){return String(s).replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i)|0;}return h;}
+
+document.getElementById("threshold").addEventListener("change",()=>{save();render();});
+render();
+</script>
+</body>
+</html>
