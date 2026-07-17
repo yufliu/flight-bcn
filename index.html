@@ -63,7 +63,7 @@
   .origin-head .count{font-size:.8rem;color:var(--muted)}
 
   .table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
-  table{border-collapse:collapse;width:100%;min-width:1180px;font-size:.84rem}
+  table{border-collapse:collapse;width:100%;min-width:1320px;font-size:.84rem}
   thead th{
     background:var(--panel2);color:var(--muted);text-align:left;font-weight:600;
     padding:10px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.76rem;
@@ -107,10 +107,17 @@
   .quick-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .quick-links a{font-size:.78rem;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--panel2)}
   .quick-links a:hover{border-color:var(--accent)}
+  .deals{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(79,140,255,.06));border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;font-size:.85rem}
+  .deals h3{margin:0 0 8px;font-size:.95rem}
+  .deals .stamp{font-size:.72rem;color:var(--muted);font-weight:400}
+  .deals ul{margin:0;padding-left:18px;color:var(--muted)}
+  .deals li{margin-bottom:5px}
+  .deals b{color:var(--text)}
+  .deals .hot{color:#6fe3a6;font-weight:700}
   td.s0 span{color:#6fe3a6;font-weight:600}
   td.s2 span{color:#ffc857}
   td.s3plus span{color:var(--danger);font-weight:600}
-  td[data-key="notes"]{min-width:150px;color:var(--muted);font-size:.8rem}
+  td[data-key="notes"]{min-width:300px;max-width:380px;color:var(--muted);font-size:.78rem;line-height:1.4}
   @media (max-width:640px){ body{padding:12px} h1{font-size:1.2rem} }
 </style>
 </head>
@@ -171,6 +178,18 @@
     </div>
   </details>
 
+  <div class="deals">
+    <h3>💎 Point deals &amp; transfer bonuses <span class="stamp">— checked Jul 17, 2026; deals rotate, re-verify before transferring</span></h3>
+    <ul>
+      <li><span class="hot">ACTIVE:</span> <b>Amex → Avios +30%</b> — makes the Iberia-via-MAD option ~23% cheaper in MR terms. Transfer only after you confirm award space on iberia.com.</li>
+      <li><span class="hot">ACTIVE:</span> <b>Amex → Flying Blue +25%</b> — same rule: confirm the award on airfrance.us first, then transfer.</li>
+      <li><b>Flying Blue Promo Rewards</b> — 25% off select routes, refreshed the <b>1st of each month</b>: check <a href="https://www.flyingblue.com/en/spend/flights/rewards" target="_blank" rel="noopener">the promo page</a> Aug 1 for LAX/MCO→Europe.</li>
+      <li><b>AA saver baseline: 30k</b> peak economy US→Europe (off-peak 22.5k is Jan–Mar/Nov–Dec only). <b>Web Specials</b> run 40–50% off — check <a href="https://www.aa.com/booking/find-flights" target="_blank" rel="noopener">aa.com</a> + Roame.</li>
+      <li><b>United saver from 30k</b> but fully dynamic (everyday 80k+) — trust only the <a href="https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true" target="_blank" rel="noopener">united.com award calendar</a>, not third-party estimates.</li>
+      <li>Track all current bonuses: <a href="https://roame.travel/guides/points-transfer-bonuses" target="_blank" rel="noopener">Roame bonus tracker</a>.</li>
+    </ul>
+  </div>
+
   <div class="callouts" id="callouts"></div>
 
   <section class="origin" id="section-LAX">
@@ -222,20 +241,30 @@ const GF_MCO="https://www.google.com/travel/flights?q=Flights+from+MCO+to+BCN+on
 const SEED = [
   // ---- LAX ----
   {id:"l1",origin:"LAX",departDate:"2026-08-27",airline:"LEVEL nonstop (only LAX–BCN nonstop)",stops:0,duration:"11h 25m",arriveBCN:"",
-   cashPP:330,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_LAX,notes:"route avg $329-335; ~4x/wk dep ~8pm — CONFIRM it flies 8/27; Aug is the cheap month"},
+   cashPP:330,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_LAX,
+   notes:"FIND IT: open GF link → set date 8/27 → filter Stops: Nonstop only. The nonstop that appears IS LEVEL (may show as Iberia/AA codeshare). If empty, LEVEL skips that day — try 8/26 or 8/28. Book direct at flylevel.com. $330 = route avg, not a quote."},
   {id:"l2",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:null,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",notes:"dynamic: saver from 30k, everyday 80k+ — use united.com award calendar, log what you see"},
+   cashPP:null,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"",
+   link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",
+   notes:"FIND IT: united.com → Book → One-way, LAX→BCN 8/27, 2 pax → tick 'Book with miles' → open the mini calendar to see the cheapest day. Log the LOWEST economy price you see — it's dynamic, no fixed price exists."},
   {id:"l3",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios)",stops:1,duration:"14h 40m",arriveBCN:"",
-   cashPP:null,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.iberia.com/us/",notes:"Avios band pricing, late Aug = peak — book via iberia.com (lower fees than BA); Amex/Chase transfer"},
+   cashPP:null,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.iberia.com/us/",
+   notes:"FIND IT: iberia.com → log in to Iberia Plus (free account) → Book → tick 'Pay with Avios' → LAX→BCN. Note Avios + cash fees. Book on iberia.com not BA (lower fees). Amex→Avios +30% bonus now: 34k Avios ≈ 26.2k MR."},
   {id:"l4",origin:"LAX",departDate:"2026-08-27",airline:"Split: LAX→JFK + JFK→BCN (demo)",stops:1,duration:"17h 45m",arriveBCN:"",
-   cashPP:465,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"demo",link:"https://www.google.com/travel/flights?q=Flights+from+JFK+to+BCN+on+2026-08-27+one+way",notes:"DEMO of 145+320 sum entry — replace with real quotes; 3h+ buffer, recheck bags"},
+   cashPP:465,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"demo",
+   link:"https://www.google.com/travel/flights?q=Flights+from+JFK+to+BCN+on+2026-08-27+one+way",
+   notes:"DEMO of the 145+320 sum trick. FIND IT: price JFK→BCN on the link, then LAX→JFK separately (red-eye lands early AM), type both as 'x+y' in the cash cell. 3h+ buffer, bags recheck, separate tickets = no protection."},
   // ---- MCO ----
   {id:"m1",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA/PHL/CLT",stops:1,duration:"~13h",arriveBCN:"",
-   cashPP:null,payWith:"American",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.aa.com/booking/find-flights",notes:"AA has most MCO-BCN connections (51/wk); check web specials on aa.com + Roame"},
+   cashPP:null,payWith:"American",pointsPP:30000,taxesPP:null,dateChecked:"7/17 chart",
+   link:"https://www.aa.com/booking/find-flights",
+   notes:"30k = published PEAK saver baseline, NOT confirmed space. FIND IT: aa.com → Book → tick 'Redeem miles' → MCO→BCN 8/27 → award calendar; hunt Web Specials (can be 40-50% off). Cross-check on roame.travel (search MCO→BCN, filter AA)."},
   {id:"m2",origin:"MCO",departDate:"2026-08-27",airline:"Icelandair via KEF",stops:1,duration:"~15h",arriveBCN:"",
-   cashPP:289,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_MCO,notes:"often cheapest MCO-BCN (route avg ~$289) — verify exact date; KEF connection"},
+   cashPP:289,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_MCO,
+   notes:"FIND IT: open GF link → set 8/27 → filter Airlines: Icelandair. Often cheapest MCO-BCN (route avg ~$289, not a quote). If pricey that day, check ±1 day. Book direct at icelandair.com."},
   {id:"m3",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Air France via ATL/JFK",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:null,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://wwws.airfrance.us/",notes:"Flying Blue promo rewards sometimes 20-25k — check airfrance.us; Amex/Chase transfer"},
+   cashPP:null,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://wwws.airfrance.us/",
+   notes:"FIND IT: airfrance.us → log in to Flying Blue (free) → Book with Miles → MCO→BCN 8/27. FIRST check Promo Rewards page (25% off list, refreshes Aug 1). Amex→FB +25% bonus now. US→Europe saver historically ~20-25k."},
 ];
 
 let state = load();
@@ -246,9 +275,12 @@ function load(){
     if(raw){
       const p = JSON.parse(raw);
       if(p && Array.isArray(p.rows)){
-        // migrate away v1 sample data (it contained a fictional "United nonstop
-        // LAX-BCN / 33k" row) — only if that row is still untouched
-        const staleSample = p.rows.some(r=>r.id==="l1" && r.airline==="United nonstop" && r.pointsPP===33000);
+        // migrate away stale sample data — only if the signature rows are untouched:
+        //  v1 shipped a fictional "United nonstop LAX-BCN / 33k" row;
+        //  v1.2 shipped short notes without FIND IT instructions
+        const staleSample = p.rows.some(r=>
+          (r.id==="l1" && r.airline==="United nonstop" && r.pointsPP===33000) ||
+          (r.id==="l1" && r.notes && r.notes.includes("CONFIRM it flies 8/27")));
         if(staleSample) return { rows: structuredClone(SEED), threshold: p.threshold||1.8, sortMode: p.sortMode||"value" };
         return p;
       }
