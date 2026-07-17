@@ -200,7 +200,8 @@
     <p class="note" style="margin-top:12px">
       Prices &amp; award costs are <b>manually logged</b> — click any cell to edit. Data autosaves in this browser;
       use <b>Export JSON</b> to back it up into the repo or move it to your phone.
-      Starter rows are illustrative placeholders — replace with live numbers from Google Flights / airline sites.
+      Seed rows are research stubs: cash figures are route averages (marked <i>est.</i> with date) — verify your exact
+      date; award miles ship <b>blank</b> because pricing is dynamic — pull live numbers from each row's link, then log them.
       See <code>NOTES.md</code> for the optional API auto-feed upgrade path.
     </p>
   </footer>
@@ -213,23 +214,28 @@ const STORAGE_KEY = "bcn-flight-tracker-v1";
 const PROGRAMS = ["cash","Chase UR","Amex MR","United","American","Delta","Iberia Avios","Flying Blue","Aer Lingus Avios","Other miles"];
 const DATE_OPTS = { LAX:["2026-08-26","2026-08-27","2026-08-28"], MCO:["2026-08-26","2026-08-27","2026-08-28"] };
 
+// Research stubs (2026-07-17): real routes + working search links. Cash figures are
+// sourced route averages marked "est." — verify exact dates. Award miles are BLANK
+// because pricing is dynamic; pull live numbers from united.com / aa.com / Roame.
+const GF_LAX="https://www.google.com/travel/flights?q=Flights+from+LAX+to+BCN+on+2026-08-27+one+way";
+const GF_MCO="https://www.google.com/travel/flights?q=Flights+from+MCO+to+BCN+on+2026-08-27+one+way";
 const SEED = [
   // ---- LAX ----
-  {id:"l1",origin:"LAX",departDate:"2026-08-27",airline:"United nonstop",stops:0,duration:"11h 05m",arriveBCN:"Aug 28, 1:35pm",
-   cashPP:null,payWith:"United",pointsPP:33000,taxesPP:5.60,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"saver economy est. — log GF cash to compute ¢/pt"},
-  {id:"l2",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD",stops:1,duration:"14h 40m",arriveBCN:"Aug 27, 6:20pm",
-   cashPP:null,payWith:"Iberia Avios",pointsPP:34000,taxesPP:210,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"Amex/Chase → Avios; Iberia adds surcharges"},
-  {id:"l3",origin:"LAX",departDate:"2026-08-28",airline:"Air France via CDG",stops:1,duration:"15h 10m",arriveBCN:"Aug 29, 4:05pm",
-   cashPP:520,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"sample cash fare"},
-  {id:"l4",origin:"LAX",departDate:"2026-08-27",airline:"Split: LAX→JFK (B6) + JFK→BCN (LEVEL)",stops:1,duration:"17h 45m",arriveBCN:"Aug 28, 10:05am",
-   cashPP:465,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"",notes:"self-transfer demo — typed 145+320 in cash cell; 3h+ JFK buffer, recheck bags"},
+  {id:"l1",origin:"LAX",departDate:"2026-08-27",airline:"LEVEL nonstop (only LAX–BCN nonstop)",stops:0,duration:"11h 25m",arriveBCN:"",
+   cashPP:330,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_LAX,notes:"route avg $329-335; ~4x/wk dep ~8pm — CONFIRM it flies 8/27; Aug is the cheap month"},
+  {id:"l2",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD",stops:1,duration:"~14h",arriveBCN:"",
+   cashPP:null,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",notes:"dynamic: saver from 30k, everyday 80k+ — use united.com award calendar, log what you see"},
+  {id:"l3",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios)",stops:1,duration:"14h 40m",arriveBCN:"",
+   cashPP:null,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.iberia.com/us/",notes:"Avios band pricing, late Aug = peak — book via iberia.com (lower fees than BA); Amex/Chase transfer"},
+  {id:"l4",origin:"LAX",departDate:"2026-08-27",airline:"Split: LAX→JFK + JFK→BCN (demo)",stops:1,duration:"17h 45m",arriveBCN:"",
+   cashPP:465,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"demo",link:"https://www.google.com/travel/flights?q=Flights+from+JFK+to+BCN+on+2026-08-27+one+way",notes:"DEMO of 145+320 sum entry — replace with real quotes; 3h+ buffer, recheck bags"},
   // ---- MCO ----
-  {id:"m1",origin:"MCO",departDate:"2026-08-27",airline:"Delta via ATL/CDG",stops:1,duration:"13h 55m",arriveBCN:"Aug 28, 2:10pm",
-   cashPP:null,payWith:"Flying Blue",pointsPP:30000,taxesPP:120,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"Amex → Flying Blue est."},
-  {id:"m2",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA/MAD",stops:1,duration:"14h 20m",arriveBCN:"Aug 28, 5:45pm",
-   cashPP:null,payWith:"Iberia Avios",pointsPP:34000,taxesPP:190,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"AA/Roame first — usually best yield"},
-  {id:"m3",origin:"MCO",departDate:"2026-08-27",airline:"United via EWR",stops:1,duration:"12h 50m",arriveBCN:"Aug 28, 1:50pm",
-   cashPP:610,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"",link:"https://www.google.com/travel/flights",notes:"sample cash fare"},
+  {id:"m1",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA/PHL/CLT",stops:1,duration:"~13h",arriveBCN:"",
+   cashPP:null,payWith:"American",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.aa.com/booking/find-flights",notes:"AA has most MCO-BCN connections (51/wk); check web specials on aa.com + Roame"},
+  {id:"m2",origin:"MCO",departDate:"2026-08-27",airline:"Icelandair via KEF",stops:1,duration:"~15h",arriveBCN:"",
+   cashPP:289,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_MCO,notes:"often cheapest MCO-BCN (route avg ~$289) — verify exact date; KEF connection"},
+  {id:"m3",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Air France via ATL/JFK",stops:1,duration:"~14h",arriveBCN:"",
+   cashPP:null,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://wwws.airfrance.us/",notes:"Flying Blue promo rewards sometimes 20-25k — check airfrance.us; Amex/Chase transfer"},
 ];
 
 let state = load();
@@ -237,7 +243,16 @@ let state = load();
 function load(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){ const p = JSON.parse(raw); if(p && Array.isArray(p.rows)) return p; }
+    if(raw){
+      const p = JSON.parse(raw);
+      if(p && Array.isArray(p.rows)){
+        // migrate away v1 sample data (it contained a fictional "United nonstop
+        // LAX-BCN / 33k" row) — only if that row is still untouched
+        const staleSample = p.rows.some(r=>r.id==="l1" && r.airline==="United nonstop" && r.pointsPP===33000);
+        if(staleSample) return { rows: structuredClone(SEED), threshold: p.threshold||1.8, sortMode: p.sortMode||"value" };
+        return p;
+      }
+    }
   }catch(e){}
   return { rows: structuredClone(SEED), threshold: 1.8 };
 }
