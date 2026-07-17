@@ -181,6 +181,7 @@
   <div class="deals">
     <h3>💎 Point deals &amp; transfer bonuses <span class="stamp">— checked Jul 17, 2026; deals rotate, re-verify before transferring</span></h3>
     <ul>
+      <li>🔥 <b>FOUND 7/17 (live, logged in): LEVEL nonstop LAX→BCN 8/27 = 24,250 Avios</b> economy + ~$150 est. fees — the same flight that's $996 cash (~3.5¢/pt). With Amex→Avios +30%, that's ≈18.7k MR per person. Also 24,250 on 8/24 &amp; 8/29 (8/28 = 39k). Transfer 48.5k Avios for 2, then book on iberia.com.</li>
       <li><span class="hot">ACTIVE:</span> <b>Amex → Avios +30%</b> — makes the Iberia-via-MAD option ~23% cheaper in MR terms. Transfer only after you confirm award space on iberia.com.</li>
       <li><span class="hot">ACTIVE:</span> <b>Amex → Flying Blue +25%</b> — same rule: confirm the award on airfrance.us first, then transfer.</li>
       <li><b>Flying Blue Promo Rewards</b> — 25% off select routes, refreshed the <b>1st of each month</b>: check <a href="https://www.flyingblue.com/en/spend/flights/rewards" target="_blank" rel="noopener">the promo page</a> Aug 1 for LAX/MCO→Europe.</li>
@@ -262,13 +263,17 @@ const SEED = [
    link:gf("JFK","2026-08-27"),
    notes:"REAL split-ticket test: Delta 6:00am LAX→JFK $259 + Air Europa 12:40am JFK→BCN $307 (typed 259+307) = $566. Saves only ~$24 vs the $590 through-fare with a ~10h JFK overnight + zero missed-connection protection. VERDICT: skip unless the gap widens."},
   {id:"lv8",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD (award)",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:930,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
+   cashPP:1000,payWith:"United",pointsPP:100200,taxesPP:5.60,dateChecked:"7/17 LIVE",
    link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",
-   notes:"united.com cash was $1,000 (8/27, checked 7/17). Award prices are LOGIN-GATED (verified 7/17): sign in to MileagePlus FIRST, then open this link — the award calendar appears. At $1,000 cash even 45k miles = 2.2¢/pt; 30k saver = 3.3¢/pt → instant book."},
-  {id:"lv9",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios award)",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:925,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
-   link:"https://www.iberia.com/us/",
-   notes:"AA/Iberia cash was $925 (8/26 via PHL) — pull the Avios side: iberia.com → free Iberia Plus login → 'Pay with Avios' → LAX→BCN. Amex→Avios +30% NOW: e.g. 42.5k Avios ≈ 32.7k MR. Book iberia.com not BA (lower fees)."},
+   notes:"LIVE from Yu's MileagePlus account: NO saver space 8/27 — economy 100.2k (cardmember 90.1k), Prem Plus 179.2k, Polaris from 200k. At $1,000 cash that's 1.0¢/pt → DON'T. Re-check the 30-day award calendar for saver drops."},
+  {id:"lv9",origin:"LAX",departDate:"2026-08-27",airline:"⭐ LEVEL nonstop via Iberia Avios",stops:0,duration:"11h 25m",arriveBCN:"Aug 28, 5:15pm",
+   cashPP:996,payWith:"Iberia Avios",pointsPP:24250,taxesPP:150,dateChecked:"7/17 LIVE",
+   link:"https://www.iberia.com/flights/?market=US&language=en&TRIP_TYPE=1&flexible=true&FARE_TYPE=R&BEGIN_CITY_01=LAX&END_CITY_01=BCN&BEGIN_DAY_01=27&BEGIN_MONTH_01=202608&BEGIN_YEAR_01=2026&ADT=2&pagoAvios=true&boton=Buscar&bookingMarket=US&quadrigam=IBHMPA#!/availability",
+   notes:"LIVE from Yu's Iberia Plus: 24,250 Avios economy on the 8:50pm NONSTOP (same $996 cash flight!). Also 24,250 on 8/24 & 8/29; 8/28=39k. Taxes est ~$150 — exact shows only once Avios are in the account (site blocks selection at 0 balance). Amex→Avios +30% ACTIVE: 24,250 ≈ 18.7k MR/person. Plan: transfer 48.5k Avios (≈37.5k MR total), book on iberia.com."},
+  {id:"lv10",origin:"LAX",departDate:"2026-08-27",airline:"United Polaris via EWR (BUSINESS)",stops:1,duration:"15h 10m",arriveBCN:"Aug 28, 9:00am",
+   cashPP:5893,payWith:"United",pointsPP:200000,taxesPP:5.60,dateChecked:"7/17 LIVE",
+   link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",
+   notes:"LIVE: cheapest Polaris award 200k + $5.60 (cardmember 180k) — 8:50am via EWR; most routings 340-395k. 2.9¢/pt vs $5,893 cash is nominal — you'd never pay that cash. 200k UR/person is steep. Iberia business: NO award space 8/27. Better business plays: FB Promo Rewards (Aug 1 refresh) or Avios business on a flex date via Monthly view."},
   // ---- MCO (live quotes 7/17) ----
   {id:"mv1",origin:"MCO",departDate:"2026-08-27",airline:"United/Lufthansa via IAD",stops:1,duration:"16h 43m",arriveBCN:"Aug 28, 8:20am",
    cashPP:533,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
@@ -306,7 +311,8 @@ function load(){
         const staleSample = p.rows.some(r=>
           (r.id==="l1" && r.airline==="United nonstop" && r.pointsPP===33000) ||
           (r.id==="l1" && r.notes && r.notes.includes("CONFIRM it flies 8/27")) ||
-          (r.id==="l1" && r.notes && r.notes.includes("route avg")));
+          (r.id==="l1" && r.notes && r.notes.includes("route avg")) ||
+          (r.id==="lv8" && r.notes && r.notes.includes("LOGIN-GATED")));
         if(staleSample) return { rows: structuredClone(SEED), threshold: p.threshold||1.8, sortMode: p.sortMode||"value" };
         return p;
       }
