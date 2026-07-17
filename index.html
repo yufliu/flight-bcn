@@ -187,6 +187,7 @@
       <li><b>AA saver baseline: 30k</b> peak economy US→Europe (off-peak 22.5k is Jan–Mar/Nov–Dec only). <b>Web Specials</b> run 40–50% off — check <a href="https://www.aa.com/booking/find-flights" target="_blank" rel="noopener">aa.com</a> + Roame.</li>
       <li><b>United saver from 30k</b> but fully dynamic (everyday 80k+) — trust only the <a href="https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true" target="_blank" rel="noopener">united.com award calendar</a>, not third-party estimates.</li>
       <li>Track all current bonuses: <a href="https://roame.travel/guides/points-transfer-bonuses" target="_blank" rel="noopener">Roame bonus tracker</a>.</li>
+      <li>⚠️ <b>Award prices are login-gated everywhere</b> (tested 7/17): United shows awards only after MileagePlus sign-in; AA blocks external award links (use its homepage form); Iberia &amp; Flying Blue need free accounts. Budget ~10 min with your logins to fill the 4 blank award cells — the ¢/pt column then decides for you.</li>
     </ul>
   </div>
 
@@ -263,7 +264,7 @@ const SEED = [
   {id:"lv8",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD (award)",stops:1,duration:"~14h",arriveBCN:"",
    cashPP:930,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",
-   notes:"Cash side was $930 (8/26 via ORD) — now pull the miles side: united.com → Book → One-way LAX→BCN → tick 'Book with miles' → mini calendar → log the LOWEST economy award. At $930 cash, even 45k miles = 2.0¢/pt value."},
+   notes:"united.com cash was $1,000 (8/27, checked 7/17). Award prices are LOGIN-GATED (verified 7/17): sign in to MileagePlus FIRST, then open this link — the award calendar appears. At $1,000 cash even 45k miles = 2.2¢/pt; 30k saver = 3.3¢/pt → instant book."},
   {id:"lv9",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios award)",stops:1,duration:"~14h",arriveBCN:"",
    cashPP:925,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://www.iberia.com/us/",
@@ -284,7 +285,7 @@ const SEED = [
   {id:"mv5",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA (award)",stops:1,duration:"11h 20m",arriveBCN:"Aug 28, 9:05am",
    cashPP:913,payWith:"American",pointsPP:30000,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://www.aa.com/booking/find-flights",
-   notes:"AA cash was $913 (3:45pm via MIA, 54m connection). 30k = published peak saver baseline, NOT confirmed space. Pull it: aa.com → 'Redeem miles' → MCO→BCN 8/27 → award calendar + Web Specials. If 30k confirms: (913−~6)÷30000 = 3.0¢/pt — BOOK IT. Cross-check roame.travel."},
+   notes:"AA cash was $913 (3:45pm via MIA, 54m connection). 30k = published peak saver baseline, NOT confirmed space. aa.com blocks external award links (verified 7/17) — start at aa.com homepage, tick 'Redeem miles' in the form, MCO→BCN 8/27. If 30k confirms: (913−~6)÷30000 = 3.0¢/pt — BOOK IT. Cross-check roame.travel."},
   {id:"mv6",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Air France via ATL (award)",stops:1,duration:"~14h",arriveBCN:"",
    cashPP:597,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://wwws.airfrance.us/",
