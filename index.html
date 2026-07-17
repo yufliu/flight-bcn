@@ -217,11 +217,10 @@
       <span class="money">¢/pt = (cash − award taxes) ÷ miles × 100</span>
     </div>
     <p class="note" style="margin-top:12px">
-      Prices &amp; award costs are <b>manually logged</b> — click any cell to edit. Data autosaves in this browser;
-      use <b>Export JSON</b> to back it up into the repo or move it to your phone.
-      Seed rows are research stubs: cash figures are route averages (marked <i>est.</i> with date) — verify your exact
-      date; award miles ship <b>blank</b> because pricing is dynamic — pull live numbers from each row's link, then log them.
-      See <code>NOTES.md</code> for the optional API auto-feed upgrade path.
+      Cash rows are <b>live Google Flights quotes pulled Jul 17, 2026</b> (per adult, incl. taxes) — prices move
+      daily, so re-open the row link right before booking. Award miles stay blank until you pull them from the
+      airline site (each award row's notes walk you through it). Click any cell to edit; data autosaves in this
+      browser; <b>Export JSON</b> to back up. See <code>NOTES.md</code> for the optional API auto-feed upgrade path.
     </p>
   </footer>
 </div>
@@ -233,38 +232,63 @@ const STORAGE_KEY = "bcn-flight-tracker-v1";
 const PROGRAMS = ["cash","Chase UR","Amex MR","United","American","Delta","Iberia Avios","Flying Blue","Aer Lingus Avios","Other miles"];
 const DATE_OPTS = { LAX:["2026-08-26","2026-08-27","2026-08-28"], MCO:["2026-08-26","2026-08-27","2026-08-28"] };
 
-// Research stubs (2026-07-17): real routes + working search links. Cash figures are
-// sourced route averages marked "est." — verify exact dates. Award miles are BLANK
-// because pricing is dynamic; pull live numbers from united.com / aa.com / Roame.
-const GF_LAX="https://www.google.com/travel/flights?q=Flights+from+LAX+to+BCN+on+2026-08-27+one+way";
-const GF_MCO="https://www.google.com/travel/flights?q=Flights+from+MCO+to+BCN+on+2026-08-27+one+way";
+// LIVE Google Flights quotes pulled 2026-07-17 (1 adult, incl. taxes; ~8pm PT).
+// Prices move daily — re-check the row link before booking. Award rows stay blank
+// until you pull them (dynamic pricing; airline sites only).
+const gf=(o,d)=>`https://www.google.com/travel/flights?q=Flights+from+${o}+to+BCN+on+${d}+one+way`;
 const SEED = [
-  // ---- LAX ----
-  {id:"l1",origin:"LAX",departDate:"2026-08-27",airline:"LEVEL nonstop (only LAX–BCN nonstop)",stops:0,duration:"11h 25m",arriveBCN:"",
-   cashPP:330,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_LAX,
-   notes:"FIND IT: open GF link → set date 8/27 → filter Stops: Nonstop only. The nonstop that appears IS LEVEL (may show as Iberia/AA codeshare). If empty, LEVEL skips that day — try 8/26 or 8/28. Book direct at flylevel.com. $330 = route avg, not a quote."},
-  {id:"l2",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:null,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"",
+  // ---- LAX (live quotes 7/17) ----
+  {id:"lv1",origin:"LAX",departDate:"2026-08-28",airline:"TAP via LIS",stops:1,duration:"20h 10m",arriveBCN:"Aug 29, 9:50pm",
+   cashPP:527,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-28"),
+   notes:"CHEAPEST FOUND. Dep 4:40pm. 7h15m Lisbon layover; LAX–LIS leg operated by Privilege Style (wet-lease — basic service). Book: open link → pick the 4:40pm TAP itinerary → continues to flytap.com."},
+  {id:"lv2",origin:"LAX",departDate:"2026-08-26",airline:"Alaska + Condor via SFO, FRA",stops:2,duration:"17h 35m",arriveBCN:"Aug 27, 4:05pm",
+   cashPP:580,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-26"),
+   notes:"Cheapest 8/26. Dep 1:30pm. Two airlines on one GF ticket — book through the link so the connection is protected. Same itinerary on 8/27 = $590."},
+  {id:"lv3",origin:"LAX",departDate:"2026-08-27",airline:"Alaska + Condor via SFO, FRA",stops:2,duration:"17h 35m",arriveBCN:"Aug 28, 4:05pm",
+   cashPP:590,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-27"),
+   notes:"Cheapest 8/27 (GF says 8/27 prices 'currently HIGH' — 8/26 & 8/28 are better days). Arr 4:05pm syncs well with MCO party's 1:15pm arrival."},
+  {id:"lv4",origin:"LAX",departDate:"2026-08-26",airline:"Aer Lingus via DUB",stops:1,duration:"17h 20m",arriveBCN:"Aug 27, 10:30pm",
+   cashPP:629,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-26"),
+   notes:"Single-airline 1-stop. Dep 8:10pm, 4h25m Dublin layover. $679 on 8/27. Bonus: Aer Lingus awards book with Avios (Chase/Amex transfer) — check aerlingus.com AerClub too."},
+  {id:"lv5",origin:"LAX",departDate:"2026-08-28",airline:"Condor via FRA",stops:1,duration:"14h 20m",arriveBCN:"Aug 29, 4:05pm",
+   cashPP:790,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-28"),
+   notes:"Fastest cheap 1-stop. Dep 4:45pm, tight-ish 1h05m FRA connection. $850 on 8/27. German leisure carrier — checked bag costs extra."},
+  {id:"lv6",origin:"LAX",departDate:"2026-08-28",airline:"LEVEL nonstop",stops:0,duration:"11h 25m",arriveBCN:"Aug 29, 5:15pm",
+   cashPP:937,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-28"),
+   notes:"The ONLY nonstop. Dep 8:50pm. $996 on 8/27 (as Iberia codeshare); does NOT fly 8/26. ~$350/person premium over 1-stops — pay only if the 11h25m matters."},
+  {id:"lv7",origin:"LAX",departDate:"2026-08-26",airline:"Split: Delta LAX→JFK + Air Europa JFK→BCN",stops:1,duration:"~29h door-to-door",arriveBCN:"Aug 27, 4:35pm",
+   cashPP:566,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",
+   link:gf("JFK","2026-08-27"),
+   notes:"REAL split-ticket test: Delta 6:00am LAX→JFK $259 + Air Europa 12:40am JFK→BCN $307 (typed 259+307) = $566. Saves only ~$24 vs the $590 through-fare with a ~10h JFK overnight + zero missed-connection protection. VERDICT: skip unless the gap widens."},
+  {id:"lv8",origin:"LAX",departDate:"2026-08-27",airline:"United via EWR/ORD (award)",stops:1,duration:"~14h",arriveBCN:"",
+   cashPP:930,payWith:"United",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://www.united.com/en/us/fsr/choose-flights?f=LAX&t=BCN&d=2026-08-27&tt=1&px=2&awardTravel=true",
-   notes:"FIND IT: united.com → Book → One-way, LAX→BCN 8/27, 2 pax → tick 'Book with miles' → open the mini calendar to see the cheapest day. Log the LOWEST economy price you see — it's dynamic, no fixed price exists."},
-  {id:"l3",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios)",stops:1,duration:"14h 40m",arriveBCN:"",
-   cashPP:null,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://www.iberia.com/us/",
-   notes:"FIND IT: iberia.com → log in to Iberia Plus (free account) → Book → tick 'Pay with Avios' → LAX→BCN. Note Avios + cash fees. Book on iberia.com not BA (lower fees). Amex→Avios +30% bonus now: 34k Avios ≈ 26.2k MR."},
-  {id:"l4",origin:"LAX",departDate:"2026-08-27",airline:"Split: LAX→JFK + JFK→BCN (demo)",stops:1,duration:"17h 45m",arriveBCN:"",
-   cashPP:465,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"demo",
-   link:"https://www.google.com/travel/flights?q=Flights+from+JFK+to+BCN+on+2026-08-27+one+way",
-   notes:"DEMO of the 145+320 sum trick. FIND IT: price JFK→BCN on the link, then LAX→JFK separately (red-eye lands early AM), type both as 'x+y' in the cash cell. 3h+ buffer, bags recheck, separate tickets = no protection."},
-  // ---- MCO ----
-  {id:"m1",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA/PHL/CLT",stops:1,duration:"~13h",arriveBCN:"",
-   cashPP:null,payWith:"American",pointsPP:30000,taxesPP:null,dateChecked:"7/17 chart",
+   notes:"Cash side was $930 (8/26 via ORD) — now pull the miles side: united.com → Book → One-way LAX→BCN → tick 'Book with miles' → mini calendar → log the LOWEST economy award. At $930 cash, even 45k miles = 2.0¢/pt value."},
+  {id:"lv9",origin:"LAX",departDate:"2026-08-26",airline:"Iberia via MAD (Avios award)",stops:1,duration:"~14h",arriveBCN:"",
+   cashPP:925,payWith:"Iberia Avios",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
+   link:"https://www.iberia.com/us/",
+   notes:"AA/Iberia cash was $925 (8/26 via PHL) — pull the Avios side: iberia.com → free Iberia Plus login → 'Pay with Avios' → LAX→BCN. Amex→Avios +30% NOW: e.g. 42.5k Avios ≈ 32.7k MR. Book iberia.com not BA (lower fees)."},
+  // ---- MCO (live quotes 7/17) ----
+  {id:"mv1",origin:"MCO",departDate:"2026-08-27",airline:"United/Lufthansa via IAD",stops:1,duration:"16h 43m",arriveBCN:"Aug 28, 8:20am",
+   cashPP:533,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
+   notes:"CHEAPEST MCO (tied w/ Air Canada 2-stop). Dep 9:37am, 6h40m IAD layover. Arrives 8:20am — earliest BCN arrival of the bunch."},
+  {id:"mv2",origin:"MCO",departDate:"2026-08-27",airline:"United/Lufthansa via ORD",stops:1,duration:"13h 15m",arriveBCN:"Aug 28, 1:15pm",
+   cashPP:593,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
+   notes:"Best time/price balance. Dep 6:00pm, 1h27m ORD connection. Arr 1:15pm — 3h before LAX party's Alaska/Condor 4:05pm arrival. +$60 over cheapest for 3.5h less travel."},
+  {id:"mv3",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Virgin Atlantic via ATL",stops:1,duration:"13h 05m",arriveBCN:"Aug 28, 12:50pm",
+   cashPP:597,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
+   notes:"Dep 5:45pm, 2h19m ATL connection. Arr 12:50pm. Nearly identical to the ORD option — pick by carrier preference."},
+  {id:"mv4",origin:"MCO",departDate:"2026-08-27",airline:"JetBlue via BOS",stops:1,duration:"11h 50m",arriveBCN:"Aug 28, 9:45am",
+   cashPP:663,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
+   notes:"Fastest MCO option. Dep 3:55pm, 1h21m BOS connection, arr 9:45am. JetBlue = decent legroom + free wifi."},
+  {id:"mv5",origin:"MCO",departDate:"2026-08-27",airline:"American via MIA (award)",stops:1,duration:"11h 20m",arriveBCN:"Aug 28, 9:05am",
+   cashPP:913,payWith:"American",pointsPP:30000,taxesPP:null,dateChecked:"cash 7/17",
    link:"https://www.aa.com/booking/find-flights",
-   notes:"30k = published PEAK saver baseline, NOT confirmed space. FIND IT: aa.com → Book → tick 'Redeem miles' → MCO→BCN 8/27 → award calendar; hunt Web Specials (can be 40-50% off). Cross-check on roame.travel (search MCO→BCN, filter AA)."},
-  {id:"m2",origin:"MCO",departDate:"2026-08-27",airline:"Icelandair via KEF",stops:1,duration:"~15h",arriveBCN:"",
-   cashPP:289,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 est.",link:GF_MCO,
-   notes:"FIND IT: open GF link → set 8/27 → filter Airlines: Icelandair. Often cheapest MCO-BCN (route avg ~$289, not a quote). If pricey that day, check ±1 day. Book direct at icelandair.com."},
-  {id:"m3",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Air France via ATL/JFK",stops:1,duration:"~14h",arriveBCN:"",
-   cashPP:null,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"",link:"https://wwws.airfrance.us/",
-   notes:"FIND IT: airfrance.us → log in to Flying Blue (free) → Book with Miles → MCO→BCN 8/27. FIRST check Promo Rewards page (25% off list, refreshes Aug 1). Amex→FB +25% bonus now. US→Europe saver historically ~20-25k."},
+   notes:"AA cash was $913 (3:45pm via MIA, 54m connection). 30k = published peak saver baseline, NOT confirmed space. Pull it: aa.com → 'Redeem miles' → MCO→BCN 8/27 → award calendar + Web Specials. If 30k confirms: (913−~6)÷30000 = 3.0¢/pt — BOOK IT. Cross-check roame.travel."},
+  {id:"mv6",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Air France via ATL (award)",stops:1,duration:"~14h",arriveBCN:"",
+   cashPP:597,payWith:"Flying Blue",pointsPP:null,taxesPP:null,dateChecked:"cash 7/17",
+   link:"https://wwws.airfrance.us/",
+   notes:"Pull the FB side: airfrance.us → free Flying Blue login → Book with Miles → MCO→BCN 8/27. Check Promo Rewards page FIRST (25% off list refreshes Aug 1). Amex→FB +25% bonus active now."},
 ];
 
 let state = load();
@@ -277,10 +301,11 @@ function load(){
       if(p && Array.isArray(p.rows)){
         // migrate away stale sample data — only if the signature rows are untouched:
         //  v1 shipped a fictional "United nonstop LAX-BCN / 33k" row;
-        //  v1.2 shipped short notes without FIND IT instructions
+        //  v1.2 shipped short notes; v1.3 shipped route averages instead of live quotes
         const staleSample = p.rows.some(r=>
           (r.id==="l1" && r.airline==="United nonstop" && r.pointsPP===33000) ||
-          (r.id==="l1" && r.notes && r.notes.includes("CONFIRM it flies 8/27")));
+          (r.id==="l1" && r.notes && r.notes.includes("CONFIRM it flies 8/27")) ||
+          (r.id==="l1" && r.notes && r.notes.includes("route avg")));
         if(staleSample) return { rows: structuredClone(SEED), threshold: p.threshold||1.8, sortMode: p.sortMode||"value" };
         return p;
       }
