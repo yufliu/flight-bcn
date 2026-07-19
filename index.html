@@ -181,7 +181,7 @@
   <div class="deals">
     <h3>💎 Point deals &amp; transfer bonuses <span class="stamp">— checked Jul 17, 2026; deals rotate, re-verify before transferring</span></h3>
     <ul>
-      <li>🔥 <b>FOUND 7/17 (live, logged in): LEVEL nonstop LAX→BCN 8/27 = 24,250 Avios</b> economy + ~$150 est. fees — the same flight that's $996 cash (~3.5¢/pt). That's 24,250 MR/person at 1:1 (≈18.7k <i>if</i> your Amex shows the targeted +30%) — a book-it deal either way. Also 24,250 on 8/24 &amp; 8/29 (8/28 = 39k). Transfer 48.5k Avios for 2, then book on iberia.com. <i>7/18 re-scan: cash side re-verified (LEVEL $937-996), but Iberia logged Yu out before the Avios re-check — log back in and re-confirm 24,250 before transferring.</i></li>
+      <li>🔥 <b>FOUND 7/17 (live, logged in): LEVEL nonstop LAX→BCN 8/27 = 24,250 Avios</b> economy + ~$150 est. fees — the same flight that's $996 cash (~3.5¢/pt). That's 24,250 MR/person at 1:1 (≈18.7k <i>if</i> your Amex shows the targeted +30%) — a book-it deal either way. Also 24,250 on 8/24 &amp; 8/29 (8/28 = 39k). Transfer 48.5k Avios for 2, then book on iberia.com. <i>7/19 re-scan: LEVEL cash confirmed $937 again, but Iberia still has Yu logged out — the 24,250 Avios price is now 2 days unverified. Log back in (or connect 1Password) and re-confirm before transferring.</i></li>
       <li>⚠️ <b>Amex transfer bonuses are TARGETED in 2026</b> — trackers report +30% Avios and +25% Flying Blue this month, but they do <b>not</b> show in Yu's account (checked 7/17). Ground truth = your Amex "Transfer points" page, nothing else. A reported <b>+30% Virgin Atlantic through 7/31</b> is worth a look there too. Either way: transfer only AFTER confirming award space.</li>
       <li><b>Flying Blue JULY promo list (book by 7/31, travel thru 12/31 — COVERS Aug 27!):</b>
         ✈️ <b>LAX premium economy 30k</b> (AF via CDG) · <b>NYC business 45k</b> (pair with a ~$220 LAX→JFK positioning flight = lie-flat for 45k+cash) · <b>MIA economy 18,750</b> (KLM via AMS — 3.5h drive from MCO).
@@ -239,7 +239,7 @@
       <span class="money">¢/pt = (cash − award taxes) ÷ miles × 100</span>
     </div>
     <p class="note" style="margin-top:12px">
-      Cash rows are <b>live Google Flights quotes (Jul 17-18, 2026 — see each row's Checked column)</b> (per adult, incl. taxes) — prices move
+      Cash rows are <b>live Google Flights quotes (Jul 17-19, 2026 — see each row's Checked column)</b> (per adult, incl. taxes) — prices move
       daily, so re-open the row link right before booking. Award miles stay blank until you pull them from the
       airline site (each award row's notes walk you through it). Click any cell to edit; data autosaves in this
       browser; <b>Export JSON</b> to back up. See <code>NOTES.md</code> for the optional API auto-feed upgrade path.
@@ -261,8 +261,8 @@ const gf=(o,d)=>`https://www.google.com/travel/flights?q=Flights+from+${o}+to+BC
 const SEED = [
   // ---- LAX (live quotes 7/17) ----
   {id:"lv1",origin:"LAX",departDate:"2026-08-28",airline:"TAP via LIS",stops:1,duration:"20h 10m",arriveBCN:"Aug 29, 9:50pm",
-   cashPP:499,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("LAX","2026-08-28"),
-   notes:"CHEAPEST protected ticket — dropped $527→$499 on 7/18. Dep 4:40pm. 7h15m Lisbon layover; LAX–LIS leg operated by Privilege Style (wet-lease — basic service). Book: open link → pick the 4:40pm TAP itinerary → continues to flytap.com."},
+   cashPP:527,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/19 LIVE",link:gf("LAX","2026-08-28"),
+   notes:"CHEAPEST protected ticket — yo-yoing: $527 (7/17) → $499 (7/18) → $527 (7/19). Set a GF price alert and buy a dip. Dep 4:40pm. 7h15m Lisbon layover; LAX–LIS leg operated by Privilege Style (wet-lease — basic service). Book: open link → pick the 4:40pm TAP itinerary → continues to flytap.com."},
   {id:"lv2",origin:"LAX",departDate:"2026-08-26",airline:"Alaska + Condor via SFO, FRA",stops:2,duration:"17h 35m",arriveBCN:"Aug 27, 4:05pm",
    cashPP:580,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("LAX","2026-08-26"),
    notes:"Cheapest 8/26. Dep 1:30pm. Two airlines on one GF ticket — book through the link so the connection is protected. Same itinerary on 8/27 = $590."},
@@ -276,7 +276,7 @@ const SEED = [
    cashPP:810,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("LAX","2026-08-28"),
    notes:"Fastest cheap 1-stop ($790→$810 on 7/18). Dep 4:45pm, tight-ish 1h05m FRA connection. $850 on 8/27. Checked bag costs extra."},
   {id:"lv6",origin:"LAX",departDate:"2026-08-28",airline:"LEVEL nonstop",stops:0,duration:"11h 25m",arriveBCN:"Aug 29, 5:15pm",
-   cashPP:937,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("LAX","2026-08-28"),
+   cashPP:937,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/19 LIVE",link:gf("LAX","2026-08-28"),
    notes:"The ONLY nonstop. Dep 8:50pm. $996 on 8/27 (as Iberia codeshare); does NOT fly 8/26. ~$350/person premium over 1-stops — pay only if the 11h25m matters."},
   {id:"lv7",origin:"LAX",departDate:"2026-08-26",airline:"Split: Delta LAX→JFK + Air Europa JFK→BCN",stops:1,duration:"~29h door-to-door",arriveBCN:"Aug 27, 4:35pm",
    cashPP:566,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",
@@ -302,17 +302,17 @@ const SEED = [
    cashPP:533,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
    notes:"CHEAPEST MCO (tied w/ Air Canada 2-stop). Dep 9:37am, 6h40m IAD layover. Arrives 8:20am — earliest BCN arrival of the bunch."},
   {id:"mv2",origin:"MCO",departDate:"2026-08-27",airline:"United/Lufthansa via ORD",stops:1,duration:"13h 15m",arriveBCN:"Aug 28, 1:15pm",
-   cashPP:598,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("MCO","2026-08-27"),
+   cashPP:598,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/19 LIVE",link:gf("MCO","2026-08-27"),
    notes:"Best time/price balance. Dep 6:00pm, 1h27m ORD connection. Arr 1:15pm — 3h before LAX party's Alaska/Condor 4:05pm arrival. +$60 over cheapest for 3.5h less travel."},
   {id:"mv3",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Virgin Atlantic via ATL",stops:1,duration:"13h 05m",arriveBCN:"Aug 28, 12:50pm",
-   cashPP:597,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/17 LIVE",link:gf("MCO","2026-08-27"),
-   notes:"Dep 5:45pm, 2h19m ATL connection. Arr 12:50pm. Nearly identical to the ORD option — pick by carrier preference."},
+   cashPP:498,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/19 LIVE",link:gf("MCO","2026-08-27"),
+   notes:"🔥 DROPPED $597→$498 on 7/19 — now the best MCO buy: fast (13h05m), protected, single alliance. Dep 5:45pm, 2h19m ATL connection, arr 12:50pm — syncs with LAX party. At $498 this beats chasing awards for MCO."},
   {id:"mv4",origin:"MCO",departDate:"2026-08-27",airline:"JetBlue via BOS",stops:1,duration:"11h 50m",arriveBCN:"Aug 28, 9:45am",
-   cashPP:623,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("MCO","2026-08-27"),
+   cashPP:623,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/19 LIVE",link:gf("MCO","2026-08-27"),
    notes:"Fastest MCO option — DROPPED $663→$623 on 7/18. Dep 3:55pm, 1h21m BOS connection, arr 9:45am. Decent legroom + free wifi."},
   {id:"mv7",origin:"MCO",departDate:"2026-08-27",airline:"Delta/Virgin via BOS (long layover)",stops:1,duration:"19h 35m",arriveBCN:"Aug 28, 8:35am",
    cashPP:498,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("MCO","2026-08-27"),
-   notes:"NEW 7/18: cheapest protected MCO ticket. Dep 7:00am, 9h15m Boston layover (leave the airport, get a lobster roll). Arr 8:35am — earliest arrival too."},
+   notes:"7/19: the FAST 5:45pm Delta/Virgin (row above) now costs the same $498 — take that one instead unless you want the 8:35am arrival. Dep 7:00am, 9h15m Boston layover."},
   {id:"mv8",origin:"MCO",departDate:"2026-08-27",airline:"Self-transfer: Norse Atlantic + Vueling via LGW",stops:1,duration:"14h 20m",arriveBCN:"Aug 28, 4:50pm",
    cashPP:489,payWith:"cash",pointsPP:null,taxesPP:0,dateChecked:"7/18 LIVE",link:gf("MCO","2026-08-27"),
    notes:"GF Cheapest tab. Dep 8:30pm, 3h40m Gatwick self-connect (a $496 version has only 1h30m — too tight for self-transfer). No bags included, no protection. Only ~$9 under the protected Delta $498 — take the Delta."},
